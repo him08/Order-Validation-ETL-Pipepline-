@@ -1,0 +1,11 @@
+product_id,product_name,category,price
+P101,Soap,Personal Care,40
+P102,Shampoo,Personal Care,120
+P103,Hair Oil,Personal Care,150
+P104,Toothpaste,Personal Care,90
+P105,Face Wash,Personal Care,180
+P106,Notebook,Stationery,60
+P107,Pen,Stationery,10
+P108,Biscuit,Food,30
+P109,Milk,Food,50
+P110,Rice,Food,60

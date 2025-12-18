@@ -16,8 +16,16 @@ with open('product_master.csv', 'r') as f:
 print(rows1)
 print(rows2)
 print(products)
+# *****MAKING A PRODUCT DICTIONARY WITH ID AND PRICE----------
+product_dict={}
+for product in products:
+    product_id=product[0]
+    product_price=product[3]
+    product_dict[product_id]=product_price
 
+#validation 1-----
 
+#validation 2---
 
 
 
