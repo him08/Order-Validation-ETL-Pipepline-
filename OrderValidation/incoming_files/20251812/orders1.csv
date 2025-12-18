@@ -1,0 +1,4 @@
+order_id,product_id,quantity,order_date,city,total_amount
+O2001,P101,2,2025-12-15,Mumbai,80
+O2002,P102,1,2025-12-15,Bangalore,120
+O2003,P110,5,2025-12-15,Mumbai,300
