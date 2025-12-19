@@ -1,4 +1,4 @@
-
+import os
 from readcsv import readFiles
 from validateCity import validateCity
 from validateEmpty import validateEmpty
@@ -6,30 +6,24 @@ from validateProductId import validateProductId
 from validateTotalSalesAmount import validateAmount
 from validateDate import validateDate
 
-rows1=readFiles('incoming_files/20251712')
-rows2=readFiles('incoming_files/20251812')
+
+# LOAD PRODUCT MASTER
+
 products = []
-with open('product_master.csv', 'r') as f:
+with open("product_master.csv", "r") as f:
     lines = f.readlines()
     header = lines[0]
-    data_lines=lines[1:]
-    for row in data_lines:
-        row=row.strip()
-        columns=row.split(",")
-        products.append(columns)
+    for row in lines[1:]:
+        products.append(row.strip().split(","))
 
-print(rows1)
-print(rows2)
-print(products)
-# *****MAKING A PRODUCT DICTIONARY WITH ID AND PRICE----------
-product_dict={}
+product_dict = {}
 for product in products:
-    product_id=product[0]
-    product_price=product[3]
-    product_dict[product_id]=product_price
+    product_dict[product[0]] = int(product[3])
 
-# MAIN FUNC TO CALL ALL FUNCS
-def validate_file(rows, product_dict):
+
+# FILE LEVEL VALIDATION
+
+def validate_file(rows):
     id_ok     = validateProductId(rows, product_dict)
     city_ok   = validateCity(rows)
     empty_ok  = validateEmpty(rows,products)
@@ -38,9 +32,52 @@ def validate_file(rows, product_dict):
 
     return id_ok and city_ok and empty_ok and amount_ok and date_ok
 
-rows1_ok = validate_file(rows1, product_dict)
-rows2_ok = validate_file(rows2, product_dict)
+# MAIN PIPELINE
 
-print("rows1 final status:", rows1_ok)
-print("rows2 final status:", rows2_ok)
+INCOMING_DIR = "incoming_files"
+
+for date_folder in os.listdir(INCOMING_DIR):
+    date_path = os.path.join(INCOMING_DIR, date_folder)
+
+    if not os.path.isdir(date_path):
+        continue
+
+    for file_name in os.listdir(date_path):
+        if not file_name.endswith(".csv"):
+            continue
+
+        file_path = os.path.join(date_path, file_name)
+        print("\nProcessing:", file_path)
+
+        # READ ONE FILE
+        rows = readFiles(file_path)
+
+        # VALIDATE FILE
+        file_ok = validate_file(rows)
+
+        if not file_ok:
+            # WRITE TO REJECTED FILES
+            rejected_dir = os.path.join("rejected_files", date_folder)
+            os.makedirs(rejected_dir, exist_ok=True)
+
+            rejected_file = os.path.join(rejected_dir, file_name)
+
+            with open(rejected_file, "w") as f:
+                f.write(header)
+                for row in rows:
+                    f.write(",".join(row) + "\n")
+
+            print("Rejected:", rejected_file)
+        else:
+            success_dir=os.path.join('success_files',date_folder)
+            os.makedirs(success_dir, exist_ok=True)
+            success_file = os.path.join(success_dir, file_name)
+            with open(success_file, "w") as f:
+                f.write(header)
+                for row in rows:
+                    f.write(",".join(row) + "\n")
+
+            print("File passed validation:", file_name)
+
+
 

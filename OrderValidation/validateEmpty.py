@@ -9,7 +9,7 @@ def validateEmpty(rows,products):
             file_is_valid=False
         else:
             print(f'Not Empty')
-
+    return file_is_valid
 
 
 
