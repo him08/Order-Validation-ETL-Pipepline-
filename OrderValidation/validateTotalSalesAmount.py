@@ -1,6 +1,6 @@
-from new import rows1,rows2, product_dict
 
 def validateAmount(rows,product_dict):
+    file_is_valid=True
     for row in rows:
       product_id=row[1]
       if row[2] == "":
@@ -13,10 +13,12 @@ def validateAmount(rows,product_dict):
           continue
       expected_amount = product_dict[product_id] * order_quantity
       if expected_amount==order_total_sales:
-        print('valid')
+        print(f'valid sales amount{product_dict[product_id]} ')
+
       else:
-        print('not valid')
+        print(f'not valid {product_dict[product_id]} ')
+        file_is_valid=False
+
+    return file_is_valid
 
 
-validateAmount(rows1,product_dict)
-validateAmount(rows2,product_dict)

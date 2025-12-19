@@ -1,14 +1,15 @@
-from new import rows1,rows2
-
 
 def validateCity(rows):
+   file_is_valid=True
    for row in rows:
        city=row[4]
-       if city=='Mumbai' or city=='Banglore':
-           print('valid')
+       if city=='Mumbai' or city=='Bangalore':
+           print(f'valid city {city}')
        else:
-           print('not valid')
+           print(f'not valid {city}')
+           file_is_valid=False
+   return file_is_valid
 
 
-validateCity(rows1)
-validateCity(rows2)
+
+
