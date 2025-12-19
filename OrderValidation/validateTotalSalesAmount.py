@@ -1,5 +1,5 @@
-
-def validateAmount(rows,product_dict):
+errors=[]
+def validateAmount(rows,product_dict,errors):
     file_is_valid=True
     for row in rows:
       product_id=row[1]
@@ -17,8 +17,10 @@ def validateAmount(rows,product_dict):
 
       else:
         print(f'not valid {product_dict[product_id]} ')
+        errors.append(row+['total sales mismatch'])
         file_is_valid=False
 
     return file_is_valid
+
 
 

@@ -23,12 +23,12 @@ for product in products:
 
 # FILE LEVEL VALIDATION
 
-def validate_file(rows):
-    id_ok     = validateProductId(rows, product_dict)
-    city_ok   = validateCity(rows)
-    empty_ok  = validateEmpty(rows,products)
-    amount_ok = validateAmount(rows, product_dict)
-    date_ok   = validateDate(rows)
+def validate_file(rows,errors):
+    id_ok     = validateProductId(rows, product_dict,errors)
+    city_ok   = validateCity(rows,errors)
+    empty_ok  = validateEmpty(rows,products,errors)
+    amount_ok = validateAmount(rows, product_dict,errors)
+    date_ok   = validateDate(rows,errors)
 
     return id_ok and city_ok and empty_ok and amount_ok and date_ok
 
@@ -51,9 +51,10 @@ for date_folder in os.listdir(INCOMING_DIR):
 
         # READ ONE FILE
         rows = readFiles(file_path)
+        errors=[]
 
         # VALIDATE FILE
-        file_ok = validate_file(rows)
+        file_ok = validate_file(rows,errors)
 
         if not file_ok:
             # WRITE TO REJECTED FILES
@@ -66,6 +67,12 @@ for date_folder in os.listdir(INCOMING_DIR):
                 f.write(header)
                 for row in rows:
                     f.write(",".join(row) + "\n")
+            error_file=file_name.replace(".csv","_error.csv")
+            error_path=os.path.join(rejected_dir, error_file)
+            with open(error_path, "w") as f:
+                f.write(header)
+                for err in errors:
+                    f.write(",".join(err) + "\n")
 
             print("Rejected:", rejected_file)
         else:
